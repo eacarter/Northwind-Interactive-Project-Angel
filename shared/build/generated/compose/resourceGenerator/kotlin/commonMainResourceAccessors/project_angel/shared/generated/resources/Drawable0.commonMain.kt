@@ -3,23 +3,13 @@
 package project_angel.shared.generated.resources
 
 import kotlin.OptIn
-import kotlin.String
-import kotlin.collections.MutableMap
-import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.InternalResourceApi
-import org.jetbrains.compose.resources.ResourceContentHash
+import org.jetbrains.compose.resources.DrawableResource
 import org.jetbrains.compose.resources.ResourceItem
+import org.jetbrains.compose.resources.LanguageQualifier
+import org.jetbrains.compose.resources.RegionQualifier
+import org.jetbrains.compose.resources.ThemeQualifier
+import org.jetbrains.compose.resources.DensityQualifier
 
-private const val MD: String = "composeResources/project_angel.shared.generated.resources/"
-
-@delegate:ResourceContentHash(379_089_144)
-internal val Res.drawable.compose_multiplatform: DrawableResource by lazy {
-      DrawableResource("drawable:compose_multiplatform", setOf(
-        ResourceItem(setOf(), "${MD}drawable/compose-multiplatform.xml", -1, -1),
-      ))
-    }
-
-@InternalResourceApi
-internal fun _collectCommonMainDrawable0Resources(map: MutableMap<String, DrawableResource>) {
-  map.put("compose_multiplatform", Res.drawable.compose_multiplatform)
-}
+internal val Res.drawable.drawable: DrawableResource by lazy { DrawableResource("drawable:drawable", setOf(ResourceItem(setOf(),"drawable/drawable",-1,-1))) }
+internal val Res.drawable.drawable_dark: DrawableResource by lazy { DrawableResource("drawable:drawable_dark", setOf(ResourceItem(setOf(),"drawable/drawable-dark",-1,-1))) }

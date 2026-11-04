@@ -5,6 +5,8 @@ plugins {
     alias(libs.plugins.androidMultiplatformLibrary)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.koin.compiler)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 kotlin {
@@ -50,12 +52,33 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            implementation(libs.navigation.compose)
+
+            // Kotlin
+            implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.coroutines.core)
+
+            // DI
+            implementation(libs.insert.koin.koin.core)
+            implementation(libs.insert.koin.koin.compose)
+            implementation(libs.insert.koin.koin.compose.viewmodel)
+            api(libs.koin.annotations)
+
+            // Firebase
+            implementation(libs.firebase.auth)
+            implementation(libs.firebase.firestore)
+
+            // Secure keys
+            implementation(libs.kvault)
+
+            implementation(libs.kable.core)
+
+            // Logging
+            implementation(libs.kermit)
         }
+
         commonTest.dependencies {
             implementation(libs.kotlin.test)
-        }
-        getByName("androidDeviceTest").dependencies {
-            implementation(libs.androidx.testRunner)
         }
     }
 }
