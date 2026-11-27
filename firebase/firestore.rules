@@ -1,0 +1,52 @@
+rules_version = '2';
+
+// Project Angel. The backend (Cloud Functions, Admin SDK) is authoritative for registrations,
+// entitlement and incident transitions. Clients only read their own records.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function isUser(uid) { return signedIn() && request.auth.uid == uid; }
+    // Security staff use the Flutter console with custom claims set by the venue admin portal.
+    function isVenueSecurity(venueId) {
+      return signedIn()
+        && request.auth.token.role == 'security'
+        && request.auth.token.venueId == venueId;
+    }
+
+    // Minimal profile: uid, email, optional alias, created timestamp.
+    match /users/{uid} {
+      allow read: if isUser(uid);
+      allow create: if isUser(uid)
+        && request.resource.data.keys().hasOnly(['uid', 'email', 'displayAlias', 'createdAtMs'])
+        && request.resource.data.uid == uid;
+      allow update: if isUser(uid)
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayAlias']);
+
+      // Temporary venue registrations are created and expired only by the backend.
+      match /registrations/{venueId} {
+        allow read: if isUser(uid);
+        allow write: if false;
+      }
+    }
+
+    // Incidents: visitors read their own; venue security reads its venue's incidents.
+    // All writes go through callable functions (submitAlert, updateIncidentStatus).
+    match /incidents/{incidentId} {
+      allow read: if signedIn() && (
+        resource.data.uid == request.auth.uid || isVenueSecurity(resource.data.venueId)
+      );
+      allow write: if false;
+
+      match /events/{eventId} {
+        allow read: if signedIn() && isVenueSecurity(get(/databases/$(database)/documents/incidents/$(incidentId)).data.venueId);
+        allow write: if false;
+      }
+    }
+
+    // Venue directory, invitations, access requests, idempotency keys: server only.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

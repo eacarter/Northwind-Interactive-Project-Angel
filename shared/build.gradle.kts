@@ -92,6 +92,19 @@ kotlin {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
         }
+        // Opt-in screenshot tour: Robolectric (native graphics) renders real screens to PNG.
+        //   ./gradlew :shared:testAndroidHostTest -Pangel.screenshots --tests "*ScreenshotTour*"
+        if (providers.gradleProperty("angel.screenshots").isPresent) {
+            getByName("androidHostTest") {
+                kotlin.srcDir("src/androidScreenshotTest/kotlin")
+                dependencies {
+                    implementation(libs.junit)
+                    implementation(libs.robolectric)
+                    implementation(libs.androidx.compose.ui.test.junit4)
+                    implementation(libs.androidx.compose.ui.test.manifest)
+                }
+            }
+        }
     }
 }
 

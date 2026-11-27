@@ -2,7 +2,6 @@ package org.northwindinteractive.project.feature.venue
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -163,6 +162,7 @@ fun HomeScreen(
                 .navigationBarsPadding(),
             verticalArrangement = Arrangement.spacedBy(Spacing.md),
         ) {
+            SubmissionFeedback(state.submission, onRetry = viewModel::retryAlert, onDismiss = viewModel::acknowledgeSubmission)
             val open = session.openIncident
             if (open != null && session.phase != VisitPhase.INSIDE_ACTIVE) {
                 ActiveIncidentBanner(open, onClick = { onOpenIncident(open.incidentId) })
@@ -229,7 +229,7 @@ private fun ColumnScope.ActiveVenueContent(
                 )
             }
         }
-        StatusPill(text = if (showMap) "Hide map" else "View map", tone = Tone.PRIMARY, modifier = Modifier.clickable(role = Role.Button) { showMap = !showMap })
+        AngelTextButton(if (showMap) "Hide map" else "View map", onClick = { showMap = !showMap })
     }
     if (showMap) {
         GeofenceMapCard(label = "You are inside the venue", caption = "Location estimate · not an exact indoor position")
@@ -263,8 +263,6 @@ private fun ColumnScope.ActiveVenueContent(
         textAlign = TextAlign.Center,
         modifier = Modifier.fillMaxWidth().semantics { liveRegion = LiveRegionMode.Polite },
     )
-
-    SubmissionFeedback(state.submission, onRetry = viewModel::retryAlert, onDismiss = viewModel::acknowledgeSubmission)
 
     Row(horizontalArrangement = Arrangement.spacedBy(Spacing.sm)) {
         MiniStatusCard(
@@ -735,6 +733,7 @@ private fun SubmissionFeedback(submission: SubmissionState, onRetry: () -> Unit,
             )
             Spacer(Modifier.height(Spacing.xs))
             PrimaryButton("Retry sending", onClick = onRetry, containerColor = AngelTheme.colors.danger)
+            AngelTextButton("Dismiss", onClick = onDismiss, modifier = Modifier.align(Alignment.CenterHorizontally))
         }
         is SubmissionState.Blocked -> AngelCard(containerColor = AngelTheme.colors.warningSoft, borderColor = AngelTheme.colors.warning.copy(alpha = 0.4f)) {
             Text("Alert not sent", style = MaterialTheme.typography.titleSmall, color = AngelTheme.colors.warning)
