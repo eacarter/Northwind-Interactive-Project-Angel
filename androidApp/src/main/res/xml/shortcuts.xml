@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_tile_alert"
+        android:shortcutId="discreet_alert"
+        android:shortcutLongLabel="@string/shortcut_alert_long"
+        android:shortcutShortLabel="@string/shortcut_alert_short">
+        <intent
+            android:action="org.northwindinteractive.project.action.DISCREET_ALERT"
+            android:targetClass="org.northwindinteractive.project.MainActivity"
+            android:targetPackage="org.northwindinteractive.project">
+            <extra
+                android:name="activation_method"
+                android:value="APP_SHORTCUT" />
+        </intent>
+    </shortcut>
+</shortcuts>
