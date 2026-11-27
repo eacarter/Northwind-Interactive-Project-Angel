@@ -1,27 +1,27 @@
 package org.northwindinteractive.project
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
-import com.northwindinteractive.northwindinteractivepapertrader.di.initKoin
+import org.northwindinteractive.project.platform.AndroidPermissionBridge
+import org.northwindinteractive.project.platform.handleDiscreetAlertIntent
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        initKoin()
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+        AndroidPermissionBridge.register(this)
+        if (savedInstanceState == null) handleDiscreetAlertIntent(intent)
 
         setContent {
             App()
         }
     }
-}
 
-@Preview
-@Composable
-fun AppAndroidPreview() {
-    App()
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        handleDiscreetAlertIntent(intent)
+    }
 }
